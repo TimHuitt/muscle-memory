@@ -39,18 +39,26 @@ function resetCode(selection) {
   textBox.innerHTML = currentCode;
 }
 
-function updateText(bool) {
+function updateText(bool, pointer) {
   const textBox = document.querySelector(".text-container pre");
   const letter = codeRemaining[0];
   let dec = ''
+  if (pointer) {
+
+  } else if (bool) {
+
+  }
+
   if (letter === " ") {
     dec = `text-decoration: underline;`
   }
+
   if (bool) {
     codeCompleted += `<span style="color:white;${dec}">${letter}</span>`;
   } else {
     codeCompleted += `<span style="color:red;${dec}">${letter}</span>`;
   }
+
   codeRemaining = codeRemaining.substr(1);
   const newCode = codeCompleted + codeRemaining;
   textBox.innerHTML = newCode;
@@ -102,6 +110,7 @@ function handleText(e) {
     }
   }
 }
+const resizer = document.querySelector(".resize-icon")
 
 const input = document.querySelector(".input")
 input.addEventListener("keydown", function (e) {
