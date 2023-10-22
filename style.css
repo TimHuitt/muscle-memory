@@ -23,7 +23,7 @@ main {
     background:#111;
 }
 .content-container {
-    width: 80%;
+    width: 90%;
     padding: 20px;
     text-align: center;
     border: .25em solid #888;
@@ -33,11 +33,13 @@ main {
 
 h1 {
     margin: 0;
+    font-family: 'Oswald', sans-serif;
 }
 
 .text-container {
-    padding-left: 10%;
-    font-size: 2vmin;
+    padding-left: 2%;
+    font-family: 'Lato', sans-serif;
+    font-size: 2.75vmin;
     text-align: left;
 }
 
@@ -53,7 +55,7 @@ h1 {
 
 .input {
     height: 100%;
-    width: 85%;
+    width: 100%;
     border-radius: 1em;
     padding: 10px;
     color: white;
@@ -61,7 +63,7 @@ h1 {
     text-align: left;
     white-space: nowrap;
     border: 3px solid #aaa;
-    border-radius: 1em;
+    border-radius: 1rem;
     background: #222;
     overflow: hidden;
 }
