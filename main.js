@@ -3,7 +3,7 @@
 // TODO: track time/add wpm(?)
 // TODO: add practice tabs
 // TODO: if practice mode, display Play option
-
+// TODO: add reset button
 const codeObj = {
   conditions: {
     easy: `
@@ -95,6 +95,20 @@ let currentSnip = 1;
 let roundsLeft = 0;
 let cont = false;
 
+function setCursor() {
+  const inputBox = document.querySelector(".input");
+
+  let range = document.createRange()
+  let selection = window.getSelection()
+
+  range.selectNodeContents(inputBox)
+  range.collapse(false)
+
+  selection.removeAllRanges();
+  selection.addRange(range)
+  inputBox.focus()
+}
+
 function getShape(obj) {
   let cats = 0;
   let snips = 0;
@@ -145,7 +159,7 @@ function nextCode() {
       if (snip === totalSnips) {
         const textBox = document.querySelector(".text-container pre");
         textBox.innerHTML = `CONGRATULATIONS!\nYou'll be typing functions in your sleep!`
-        
+
         return
       }
       const snipText = document.querySelector(".snip");
@@ -206,14 +220,17 @@ function updateText(bool, e, pointer) {
   textBox.innerHTML = newCode;
 }
 
-function checkIndent() {
+function checkIndent(e) {
   const inputBox = document.querySelector(".input");
-
+  const body = document.querySelector('body')
   for (let i of codeRemaining) {
-    if (i === " ") {
-      updateText(true);
+    if (i == " ") {
+      e.preventDefault()
+      updateText(true, e);
+      inputBox.innerHTML = inputBox.innerHTML + `&nbsp`
+      setCursor();
     } else {
-      return;
+      break;
     }
   }
 }
@@ -225,8 +242,8 @@ function handleEnter(e) {
   const letter = codeRemaining[0];
   if (letter !== undefined && letter.charCodeAt(0) === 10) {
     updateText(true, e);
-    inputBox.innerHTML = "";
-    checkIndent();
+    // inputBox.innerHTML = "";
+    checkIndent(e);
   } else {
     updateText(false, e);
   }
@@ -234,7 +251,7 @@ function handleEnter(e) {
 
 function handleText(e) {
   if (e.key === "Enter") {
-    e.preventDefault();
+    // e.preventDefault();
     handleEnter(e);
   } else if (e.key === "Tab") {
     e.preventDefault();
