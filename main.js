@@ -1,11 +1,61 @@
 const codeObj = {
+  conditions: {
+    easy: `
+let num = 11;
+if (num > 5) {
+  console.log('if');
+}
+    `,
+    medium: `
+let num = 5;
+if (num > 5) {
+  console.log('if');
+} else {
+  console.log('else');
+}
+    `,
+    hard: `
+let num = 0;
+if (num < 0) {
+  console.log('if');
+} else if (num > 0) {
+  console.log('else if');
+} else {
+  console.log('else');
+}
+    `,
+  },
   functions: {
     easy: `
 function sayHello(name) {
   let msg = 'Hello, ' + name + '. How are you?';
   return msg;
 }
-console.log(sayHello('bootcamp prep')); 
+console.log(sayHello('bootcamp prep'));
+    `,
+    medium: `
+function checkNumber(num) {
+  if (num > 0) {
+    return 'positive';
+  } else if (num < 0) {
+    return 'negative';
+  } else {
+    return 'zero';
+  }
+}
+console.log(checkNumber(5));
+    `,
+    hard: `
+function fizzBuzz1(max) {
+  for (let i = 0; i < max; i += 1) {
+
+    if (i % 3 === 0 && i % 5 !== 0) {
+      console.log(i);
+    } else if (i % 5 === 0 && i % 3 !== 0) {
+      console.log(i);
+    }
+  }
+}
     `,
     hardest: `
 function evenCaps(sentence) {
@@ -27,30 +77,67 @@ function evenCaps(sentence) {
   },
 };
 
+
 let currentCode;
 let codeRemaining;
 let codeCompleted = "";
 
-function resetCode(selection) {
+function getNextCode(current) {
+  return "easy";
+}
+
+function nextCode() {
+  const textContainer = document.querySelector(".text-container");
+  let current = false;
+
+  for (let i in codeObj) {
+    for (let j in codeObj[i]) {
+      if (currentCode === undefined) {
+        resetCode(codeObj[i][j]);
+        return;
+      }
+      if (current) {
+        resetCode(codeObj[i][j]);
+        return;
+      }
+      console.log(currentCode , codeObj[i][j])
+      if (codeObj[i][j].trim() === currentCode.trim()) {
+        current = true;
+        console.log(current)
+      }
+    }
+  }
+}
+
+function resetCode(code) {
   const textBox = document.querySelector(".text-container pre");
-  currentCode = codeObj.functions[selection].trim();
+  currentCode = code.trim();
   codeRemaining = currentCode;
   codeCompleted = "";
   textBox.innerHTML = currentCode;
 }
 
-function updateText(bool, pointer) {
+function updateText(bool, e, pointer) {
   const textBox = document.querySelector(".text-container pre");
-  const letter = codeRemaining[0];
-  let dec = ''
+  const inputBox = document.querySelector(".input");
+  let letter = codeRemaining[0];
+  let dec = "";
+  if (letter === undefined) {
+    e.preventDefault();
+    nextCode();
+    inputBox.innerHTML = "";
+    return;
+  }
   if (pointer) {
-
   } else if (bool) {
-
   }
 
   if (letter === " ") {
-    dec = `text-decoration: underline;`
+    dec = `text-decoration: underline;`;
+  }
+  if (letter.charCodeAt(0) === 10) {
+    dec = `text-decoration: underline;`;
+    letter = "_\n";
   }
 
   if (bool) {
@@ -65,59 +152,59 @@ function updateText(bool, pointer) {
 }
 
 function checkIndent() {
-  const textBox = document.querySelector(".input");
-  let numSpaces = 0
+  const inputBox = document.querySelector(".input");
+  let numSpaces = 0;
   for (let i of codeRemaining) {
     if (i === " ") {
-      numSpaces += 1
-      updateText(true)
+      numSpaces += 1;
+      updateText(true);
     } else {
-      return
+      return;
     }
   }
-  const spaces = '\u00A0'.repeat(numSpaces);
+  const spaces = "\u00A0".repeat(numSpaces);
   const textNode = document.createTextNode(spaces);
-  textBox.insertBefore(textNode, textBox.firstChild);
+  inputBox.insertBefore(textNode, textBox.firstChild);
 }
 
-function handleTab() {
+function handleTab() {}
 
-}
-
-function handleEnter() {
-  const textBox = document.querySelector(".input");
-  updateText(true)
-  textBox.innerHTML = "";
-  checkIndent()
+function handleEnter(e) {
+  const inputBox = document.querySelector(".input");
+  const letter = codeRemaining[0];
+  if (letter !== undefined && letter.charCodeAt(0) === 10) {
+    updateText(true, e);
+    inputBox.innerHTML = "";
+    checkIndent();
+  } else {
+    updateText(false, e);
+  }
 }
 
 function handleText(e) {
   if (e.key === "Enter") {
     e.preventDefault();
-    handleEnter()
+    handleEnter(e);
   } else if (e.key === "Tab") {
     e.preventDefault();
-    handleTab()
+    handleTab();
   } else if (e.key === "Backspace") {
-    
+    e.preventDefault();
   } else if (e.key === "Shift") {
     // ignore
   } else {
     if (e.key === codeRemaining[0]) {
-      updateText(true);
+      updateText(true, e);
     } else {
-      updateText(false);
+      updateText(false, e);
     }
   }
 }
-const resizer = document.querySelector(".resize-icon")
 
-const input = document.querySelector(".input")
+const input = document.querySelector(".input");
 input.addEventListener("keydown", function (e) {
   handleText(e);
 });
-input.focus()
-resetCode("easy");
 
-
-  
+input.focus();
+nextCode();
