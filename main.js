@@ -1,5 +1,5 @@
 // TODO: add finish screen
-// TODO: track score/add scoreboard
+// TODO: track accuracy/add display
 // TODO: track time/add wpm(?)
 // TODO: add practice tabs
 // TODO: if practice mode, display Play option
@@ -89,11 +89,24 @@ const rounds = 1;
 let currentCode;
 let codeRemaining;
 let codeCompleted = "";
+
 let currentRound = 1;
 let currentCat = 1;
 let currentSnip = 1;
 let roundsLeft = 0;
 let cont = false;
+
+let correct = 0;
+let incorrect = 0;
+
+function updateAcc(isCorrect) {
+  (isCorrect) ? correct++ : incorrect++
+  const acc = Math.floor((correct / (incorrect + correct)) * 100)
+  output = (incorrect) ? acc : 100
+  output = (correct < 1) ? 0 : acc
+  const accText = document.querySelector('.accuracy')
+  accText.innerHTML = `${output}%`
+}
 
 function setCursor() {
   const inputBox = document.querySelector(".input");
@@ -198,7 +211,7 @@ function updateText(bool, e, pointer) {
   }
 
   if (pointer) {
-  } else if (bool) {
+
   }
 
   if (letter === " ") {
@@ -210,8 +223,10 @@ function updateText(bool, e, pointer) {
   }
 
   if (bool) {
+    updateAcc(bool)
     codeCompleted += `<span style="color:white;${dec}">${letter}</span>`;
   } else {
+    updateAcc(bool)
     codeCompleted += `<span style="color:red;${dec}">${letter}</span>`;
   }
 
@@ -225,19 +240,30 @@ function checkIndent(e) {
   const body = document.querySelector('body')
   for (let i of codeRemaining) {
     if (i == " ") {
-      e.preventDefault()
       updateText(true, e);
       inputBox.innerHTML = inputBox.innerHTML + `&nbsp`
       setCursor();
     } else {
-      break;
+      return;
     }
   }
 }
 
-function handleTab() {}
+function handleTab(e) {
+  e.preventDefault()
+  const letter = codeRemaining[0];
+
+  if (letter == ' ') {
+    updateText(true, e);
+    // inputBox.innerHTML = "";
+    checkIndent(e);
+  } else {
+    updateText(false, e);
+  }
+}
 
 function handleEnter(e) {
+  e.preventDefault()
   const inputBox = document.querySelector(".input");
   const letter = codeRemaining[0];
   if (letter !== undefined && letter.charCodeAt(0) === 10) {
@@ -254,8 +280,7 @@ function handleText(e) {
     // e.preventDefault();
     handleEnter(e);
   } else if (e.key === "Tab") {
-    e.preventDefault();
-    handleTab();
+    handleTab(e);
   } else if (e.key === "Backspace") {
     e.preventDefault();
   } else if (e.key === "Delete") {

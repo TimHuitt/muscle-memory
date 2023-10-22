@@ -76,6 +76,7 @@ h1 {
 
 .input {
     height: 100%;
+    max-height: 300px;
     width: 100%;
     border-radius: 1em;
     padding: 10px;
@@ -88,17 +89,23 @@ h1 {
     background: #222;
     box-shadow: inset 5px 5px 10px #000;
     outline: none;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
+.accuracy,
 .round,
 .snip {
     position: absolute;
-    top: 2%;
-    right: 2%;
+    top: 4%;
+    right: 5%;
     color: #333;
-    font-size: 2rem;
+    font-size: 4vmin;
     font-weight: bold;
+}
+
+.accuracy {
+    right: auto;
+    left: 5%;
 }
 
 .snip {
@@ -107,3 +114,18 @@ h1 {
     color: #222;
     font-size: 1rem;
 }
+
+.pointer {
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-underline-offset: 3px;
+    animation: blink-underline 1s infinite alternate;
+}
+
+@keyframes blink-underline {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
