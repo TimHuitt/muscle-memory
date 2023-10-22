@@ -1,5 +1,3 @@
-// TODO: fix round iteration
-// TODO: update snippet # on change
 // TODO: add finish screen
 // TODO: track score/add scoreboard
 // TODO: track time/add wpm(?)
@@ -86,7 +84,7 @@ function evenCaps(sentence) {
 };
 
 // number of rounds per snippet
-const rounds = 2;
+const rounds = 1;
 
 let currentCode;
 let codeRemaining;
@@ -97,9 +95,22 @@ let currentSnip = 1;
 let roundsLeft = 0;
 let cont = false;
 
+function getShape(obj) {
+  let cats = 0;
+  let snips = 0;
+
+  for (let i in obj) {
+    cats++;
+    for (let j in obj[i]) {
+      snips++;
+    }
+  }
+  return [cats, snips];
+}
+
 // set round display number
 // increase currentRound
-// reset (options): bool
+// reset rounds(optional): bool
 function setRound(reset) {
   const round = document.querySelector(".round");
 
@@ -108,8 +119,8 @@ function setRound(reset) {
     round.innerHTML = `x${roundsLeft}`;
     currentRound = 1;
   } else {
-    roundsLeft = rounds + 1 - currentRound;
-    round.innerHTML = `x${roundsLeft}`;
+    roundsLeft = rounds - currentRound;
+    round.innerHTML = `x${roundsLeft + 1}`;
     currentRound++;
   }
 }
@@ -121,20 +132,24 @@ function nextCode() {
   for (let i in codeObj) {
     for (let j in codeObj[i]) {
       // if at beginning
-      if (currentSnip === snip && 
-        roundsLeft > 1
-      ) {
+      console.log(roundsLeft)
+      if (currentSnip === snip && roundsLeft) {
         setCode(codeObj[i][j]);
         setRound();
         return;
-      } else if (
-        currentSnip === snip &&
-        roundsLeft === 1
-      ) {
+      } else if (currentSnip === snip && !roundsLeft) {
         setRound(true);
         currentSnip++;
       }
       snip++;
+      if (snip === totalSnips) {
+        const textBox = document.querySelector(".text-container pre");
+        textBox.innerHTML = `CONGRATULATIONS!\nYou'll be typing functions in your sleep!`
+        
+        return
+      }
+      const snipText = document.querySelector(".snip");
+      snipText.innerHTML = `snippet: ${snip} / ${totalSnips}`;
     }
   }
 }
@@ -226,8 +241,12 @@ function handleText(e) {
     handleTab();
   } else if (e.key === "Backspace") {
     e.preventDefault();
+  } else if (e.key === "Delete") {
+    e.preventDefault();
   } else if (e.key === "Shift") {
-    // ignore
+    e.preventDefault();
+  } else if (e.key === "Meta") {
+    e.preventDefault();
   } else {
     if (e.key === codeRemaining[0]) {
       updateText(true, e);
@@ -242,6 +261,15 @@ input.addEventListener("keydown", function (e) {
   handleText(e);
 });
 
-roundsLeft = rounds;
+const snipText = document.querySelector(".snip");
+const totalSnips = getShape(codeObj)[1]
+snipText.innerHTML = `snippet: 1 / ${totalSnips}`
+
+const body = document.querySelector('body')
+body.addEventListener("click", function(e) {
+  input.focus();
+})
+
 input.focus();
+setRound(true)
 nextCode();
