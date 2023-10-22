@@ -1,3 +1,11 @@
+// TODO: fix round iteration
+// TODO: update snippet # on change
+// TODO: add finish screen
+// TODO: track score/add scoreboard
+// TODO: track time/add wpm(?)
+// TODO: add practice tabs
+// TODO: if practice mode, display Play option
+
 const codeObj = {
   conditions: {
     easy: `
@@ -77,62 +85,72 @@ function evenCaps(sentence) {
   },
 };
 
+// number of rounds per snippet
+const rounds = 2;
 
 let currentCode;
 let codeRemaining;
 let codeCompleted = "";
 let currentRound = 1;
-const rounds = 2;
+let currentCat = 1;
+let currentSnip = 1;
+let roundsLeft = 0;
+let cont = false;
 
+// set round display number
+// increase currentRound
+// reset (options): bool
+function setRound(reset) {
+  const round = document.querySelector(".round");
 
-
-function setRound() {
-  const round = document.querySelector('.round')
-  const roundsLeft = (rounds + 1) - currentRound
-  round.innerHTML = `x${roundsLeft}`
-
-  currentRound++
+  if (reset) {
+    roundsLeft = rounds;
+    round.innerHTML = `x${roundsLeft}`;
+    currentRound = 1;
+  } else {
+    roundsLeft = rounds + 1 - currentRound;
+    round.innerHTML = `x${roundsLeft}`;
+    currentRound++;
+  }
 }
 
+// determine and set next code snippet
 function nextCode() {
-  const round = document.querySelector('.round')
-  const roundsLeft = (rounds) - currentRound
-  
-  const textContainer = document.querySelector(".text-container");
-  let current = false;
+  let snip = 1;
 
   for (let i in codeObj) {
     for (let j in codeObj[i]) {
-      if (currentCode === undefined) {
-        resetCode(codeObj[i][j]);
-        current = false
-        setRound()
-
-        if (roundsLeft) {
-          currentCode = undefined
-        }
-        
-        return;
-      }
-
-      if (current) {
-        currentRound = 1;
-        current = false;
+      // if at beginning
+      if (currentSnip === snip && 
+        roundsLeft > 1
+      ) {
+        setCode(codeObj[i][j]);
         setRound();
-        resetCode(codeObj[i][j]);
         return;
+      } else if (
+        currentSnip === snip &&
+        roundsLeft === 1
+      ) {
+        setRound(true);
+        currentSnip++;
       }
-      
-      if (currentCode && codeObj[i][j].trim() === currentCode.trim()) {
-        current = true;
-      }
+      snip++;
     }
   }
 }
 
-function resetCode(code) {
+// reset current code selection/display
+// code accepts string or array
+// full snippet, or [category, difficulty]
+function setCode(code) {
   const textBox = document.querySelector(".text-container pre");
-  currentCode = code.trim();
+
+  if (Array.isArray(code)) {
+    currentCode = codeObj[code[0]][code[1]];
+  } else {
+    currentCode = code.trim();
+  }
+
   codeRemaining = currentCode;
   codeCompleted = "";
   textBox.innerHTML = currentCode;
@@ -149,7 +167,7 @@ function updateText(bool, e, pointer) {
     inputBox.innerHTML = "";
     return;
   }
-  
+
   if (pointer) {
   } else if (bool) {
   }
@@ -224,5 +242,6 @@ input.addEventListener("keydown", function (e) {
   handleText(e);
 });
 
+roundsLeft = rounds;
 input.focus();
 nextCode();
