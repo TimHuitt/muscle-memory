@@ -31,7 +31,7 @@ let currentCode;
 let codeRemaining;
 let codeCompleted = "";
 
-function setCode(selection) {
+function resetCode(selection) {
   const textBox = document.querySelector(".text-container pre");
   currentCode = codeObj.functions[selection].trim();
   codeRemaining = currentCode;
@@ -39,38 +39,76 @@ function setCode(selection) {
   textBox.innerHTML = currentCode;
 }
 
-function updateText(bool, pos) {
+function updateText(bool) {
   const textBox = document.querySelector(".text-container pre");
   const letter = codeRemaining[0];
-
+  let dec = ''
+  if (letter === " ") {
+    dec = `text-decoration: underline;`
+  }
   if (bool) {
-    codeCompleted += `<span style="color:white;">${letter}</span>`;
+    codeCompleted += `<span style="color:white;${dec}">${letter}</span>`;
   } else {
-    codeCompleted += `<span style="color:red;">${letter}</span>`;
+    codeCompleted += `<span style="color:red;${dec}">${letter}</span>`;
   }
   codeRemaining = codeRemaining.substr(1);
   const newCode = codeCompleted + codeRemaining;
   textBox.innerHTML = newCode;
 }
 
+function checkIndent() {
+  const textBox = document.querySelector(".input");
+  let numSpaces = 0
+  for (let i of codeRemaining) {
+    if (i === " ") {
+      numSpaces += 1
+      updateText(true)
+    } else {
+      return
+    }
+  }
+  const spaces = '\u00A0'.repeat(numSpaces);
+  const textNode = document.createTextNode(spaces);
+  textBox.insertBefore(textNode, textBox.firstChild);
+}
+
+function handleTab() {
+
+}
+
+function handleEnter() {
+  const textBox = document.querySelector(".input");
+  updateText(true)
+  textBox.innerHTML = "";
+  checkIndent()
+}
+
 function handleText(e) {
-  textBox = document.querySelector(".input");
   if (e.key === "Enter") {
     e.preventDefault();
-    textBox.innerHTML = "";
+    handleEnter()
+  } else if (e.key === "Tab") {
+    e.preventDefault();
+    handleTab()
+  } else if (e.key === "Backspace") {
+    
+  } else if (e.key === "Shift") {
+    // ignore
   } else {
-    const pos = currentCode.length - codeRemaining.length;
-
     if (e.key === codeRemaining[0]) {
-      updateText(true, pos);
+      updateText(true);
     } else {
-      updateText(false, pos);
+      updateText(false);
     }
   }
 }
 
-document.querySelector(".input").addEventListener("keydown", function (e) {
+const input = document.querySelector(".input")
+input.addEventListener("keydown", function (e) {
   handleText(e);
 });
+input.focus()
+resetCode("easy");
 
-setCode("easy");
+
+  
