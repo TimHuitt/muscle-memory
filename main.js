@@ -81,12 +81,23 @@ function evenCaps(sentence) {
 let currentCode;
 let codeRemaining;
 let codeCompleted = "";
+let currentRound = 1;
+const rounds = 2;
 
-function getNextCode(current) {
-  return "easy";
+
+
+function setRound() {
+  const round = document.querySelector('.round')
+  const roundsLeft = (rounds + 1) - currentRound
+  round.innerHTML = `x${roundsLeft}`
+
+  currentRound++
 }
 
 function nextCode() {
+  const round = document.querySelector('.round')
+  const roundsLeft = (rounds) - currentRound
+  
   const textContainer = document.querySelector(".text-container");
   let current = false;
 
@@ -94,16 +105,26 @@ function nextCode() {
     for (let j in codeObj[i]) {
       if (currentCode === undefined) {
         resetCode(codeObj[i][j]);
+        current = false
+        setRound()
+
+        if (roundsLeft) {
+          currentCode = undefined
+        }
+        
         return;
       }
+
       if (current) {
+        currentRound = 1;
+        current = false;
+        setRound();
         resetCode(codeObj[i][j]);
         return;
       }
-      console.log(currentCode , codeObj[i][j])
-      if (codeObj[i][j].trim() === currentCode.trim()) {
+      
+      if (currentCode && codeObj[i][j].trim() === currentCode.trim()) {
         current = true;
-        console.log(current)
       }
     }
   }
@@ -128,6 +149,7 @@ function updateText(bool, e, pointer) {
     inputBox.innerHTML = "";
     return;
   }
+  
   if (pointer) {
   } else if (bool) {
   }
@@ -153,18 +175,14 @@ function updateText(bool, e, pointer) {
 
 function checkIndent() {
   const inputBox = document.querySelector(".input");
-  let numSpaces = 0;
+
   for (let i of codeRemaining) {
     if (i === " ") {
-      numSpaces += 1;
       updateText(true);
     } else {
       return;
     }
   }
-  const spaces = "\u00A0".repeat(numSpaces);
-  const textNode = document.createTextNode(spaces);
-  inputBox.insertBefore(textNode, textBox.firstChild);
 }
 
 function handleTab() {}
