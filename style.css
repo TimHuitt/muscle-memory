@@ -17,16 +17,20 @@ body {
 
 main {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100vh;
     background:#111;
+    z-index: -1;
 }
+.rules-container,
 .content-container {
     position: relative;
     width: 90%;
     max-width: 700px;
+    min-width: 450px;
     padding: 0 20px 20px;
     text-align: center;
     border: .25em solid #888;
@@ -73,6 +77,7 @@ h1 {
     width: 5%;
     max-height: 30px;
     margin-left: -6%;
+    border-radius: .5rem;
     overflow: hidden;
 }
 
@@ -83,7 +88,6 @@ h1 {
     border-radius: .5rem;
     pointer-events: auto;
     padding: 0 5px 8px;
-    border-radius: .25rem;
 }
 .reset-button:hover {
     background: #444;
@@ -114,6 +118,7 @@ h1 {
     font-family: 'Roboto Mono', monospace;
     text-align: left;
     white-space: nowrap;
+    border: 4px solid #222;
     border-radius: 1rem;
     background: #222;
     box-shadow: inset 5px 5px 10px #000;
@@ -125,7 +130,7 @@ h1 {
 .round,
 .snip {
     position: absolute;
-    top: 4%;
+    top: 2%;
     right: 5%;
     color: #333;
     font-size: 4vmin;
@@ -140,10 +145,89 @@ h1 {
 .snip {
     top: auto;
     bottom: 0;
+    right: auto;
+    left: 5%;
     color: #222;
     font-size: 1rem;
+    padding: 2px 0;
+}
+.rules-container {
+    display: none;
+    position: absolute;
+    height: 20%;
+    color: #ddd;
+    background: #222;
+    transform: translateY(-15%);
+    z-index: 2;
+    user-select: auto;
+}
+.show {
+    display: block;
+}
+.rules-container p {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    font-size: 2vmin;
+    text-align: center;
+    user-select: auto;
 }
 
+.rules-container:hover {
+    background: #222;
+}
+
+.rules-container p:first-child {
+    left: 0;
+    top: 10px;
+    width: 150px;
+}
+.rules-container p:nth-child(2) {
+    right: 20px;
+    top: 10px;
+    width: 150px;
+}
+
+.rules-container p:nth-child(3) {
+    bottom: 10px;
+    left: 20px;
+    text-align: left;
+}
+.rules-container p:last-child {
+    bottom: 10px;
+    right: 30px;
+    text-align: right;
+}
+
+h2 {
+    margin: 0;
+}
+
+.rules-button-container {
+    display: flex;
+    max-width: 700px;
+    width: 90%;
+    height: 30px;
+    padding: 0 2%;
+    justify-content: flex-end;
+}
+
+.rules-button {
+    width: 100px;
+    color: #333;
+    padding: 2px 5px 5px;
+    text-align: center;
+    font-size: 1.5rem;
+    background: #666;
+    border: 1px solid #888;
+    border-radius: 0 0 .5rem .5rem;
+    pointer-events: auto;
+}
+
+.rules-button:hover {
+    color: #999;
+    background: #222;
+}
 
 .pointer {
     text-decoration: underline;

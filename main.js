@@ -1,11 +1,11 @@
-// TODO: add finish screen
-// TODO: track accuracy/add display
-// TODO: track time/add wpm(?)
-// TODO: add practice tabs
-// TODO: if practice mode, display Play option
-// TODO: add reset button
 // TODO: better colors
 
+
+// number of rounds per snippet
+const rounds = 1;
+
+// object containing code snippets
+// codeObj -> categories -> difficulty -> snippet
 const codeObj = {
   conditions: {
     easy: `
@@ -85,8 +85,6 @@ function evenCaps(sentence) {
   },
 };
 
-// number of rounds per snippet
-const rounds = 5;
 
 let currentCode = "";
 let codeRemaining = "";
@@ -100,6 +98,8 @@ let cont = false;
 let correct = 0;
 let incorrect = 0;
 
+
+// track accuracy / update text
 function updateAcc(isCorrect) {
   (isCorrect) ? correct++ : incorrect++
   const acc = Math.floor((correct / (incorrect + correct)) * 100)
@@ -109,6 +109,7 @@ function updateAcc(isCorrect) {
   accText.innerHTML = `${output}%`
 }
 
+// reset cursor after adding indentation
 function setCursor() {
   const inputBox = document.querySelector(".input");
 
@@ -123,6 +124,7 @@ function setCursor() {
   inputBox.focus()
 }
 
+// determine shape of an object
 function getShape(obj) {
   let cats = 0;
   let snips = 0;
@@ -135,6 +137,7 @@ function getShape(obj) {
   }
   return [cats, snips];
 }
+
 
 // set round display number
 // increase currentRound
@@ -159,8 +162,7 @@ function nextCode() {
 
   for (let i in codeObj) {
     for (let j in codeObj[i]) {
-      // if at beginning
-      console.log(roundsLeft)
+      
       if (currentSnip === snip && roundsLeft) {
         setCode(codeObj[i][j]);
         setRound();
@@ -174,18 +176,17 @@ function nextCode() {
       if (snip > totalSnips) {
         const textBox = document.querySelector(".text-container pre");
         textBox.innerHTML = `CONGRATULATIONS!\nYou'll be typing functions in your sleep!`
-        
         return
       }
       const snipText = document.querySelector(".snip");
-      snipText.innerHTML = `snippet: ${snip} / ${totalSnips}`;
+      snipText.innerHTML = `${snip} / ${totalSnips}`;
     }
   }
 }
 
-// reset current code selection/display
-// code accepts string or array
-// full snippet, or [category, subcategory]
+// change snippet currently displayed
+// update code tracking
+// code: "string" or [array]
 function setCode(code) {
   const textBox = document.querySelector(".text-container pre");
 
@@ -200,6 +201,9 @@ function setCode(code) {
   textBox.innerHTML = currentCode;
 }
 
+// track typing accuracy
+// determine text formatting
+// update displayed text
 function updateText(bool, e, pointer) {
   const textBox = document.querySelector(".text-container pre");
   const inputBox = document.querySelector(".input");
@@ -306,14 +310,30 @@ input.addEventListener("keydown", function (e) {
   handleText(e);
 });
 
+
 const snipText = document.querySelector(".snip");
 const totalSnips = getShape(codeObj)[1]
-snipText.innerHTML = `snippet: 1 / ${totalSnips}`
+snipText.innerHTML = `1 / ${totalSnips}`
 
 const body = document.querySelector('body')
 body.addEventListener("click", function(e) {
+  const rulesContainer = document.querySelector(".rules-container");
+  rulesContainer.classList.remove('show');
   input.focus();
 })
+
+
+const rules = document.querySelector(".rules-button");
+rules.addEventListener("click", function (e) {
+  const rulesContainer = document.querySelector(".rules-container");
+  rulesContainer.classList.toggle('show');
+  e.stopPropagation()
+});
+
+rules.addEventListener("m", function (e) {
+  const rulesBtn = document.querySelector(".rules-button");
+  rulesBtn.classList.toggle('over');
+});
 
 const reset = document.querySelector('.reset-button')
 reset.addEventListener("click", function(e) {
@@ -335,6 +355,9 @@ reset.addEventListener("click", function(e) {
   correct = 0;
   const accText = document.querySelector('.accuracy')
   accText.innerHTML = `100%`
+
+  const snipText = document.querySelector(".snip");
+  snipText.innerHTML = `1 / ${totalSnips}`;
 
   setRound(true)
   nextCode();
