@@ -1,8 +1,10 @@
-// TODO: better colors
-
+// todo: better colors
+// todo: add full log
+// todo: track most misses
+// todo: add timer
 
 // number of rounds per snippet
-const rounds = 1;
+const rounds = 10;
 
 // object containing code snippets
 // codeObj -> categories -> difficulty -> snippet
@@ -85,43 +87,46 @@ function evenCaps(sentence) {
   },
 };
 
-
-let currentCode = "";
-let codeRemaining = "";
-let codeCompleted = "";
-
-let currentRound = 1;
-let currentSnip = 1;
-let roundsLeft = 0;
-let cont = false;
-
-let correct = 0;
-let incorrect = 0;
-
+// game related data
+const gameData = {
+  currentCode: "",
+  codeRemaining: "",
+  codeCompleted: "",
+  currentRound: 1,
+  currentSnip: 1,
+  roundsLeft: 0,
+  continueSnip: false,
+  correct: 0,
+  incorrect: 0,
+  misses: [],
+  log: "",
+};
 
 // track accuracy / update text
 function updateAcc(isCorrect) {
-  (isCorrect) ? correct++ : incorrect++
-  const acc = Math.floor((correct / (incorrect + correct)) * 100)
-  output = (incorrect) ? acc : 100
-  output = (correct < 1) ? 0 : acc
-  const accText = document.querySelector('.accuracy')
-  accText.innerHTML = `${output}%`
+  isCorrect ? gameData.correct++ : gameData.incorrect++;
+  const acc = Math.floor(
+    (gameData.correct / (gameData.incorrect + gameData.correct)) * 100
+  );
+  output = gameData.incorrect ? acc : 100;
+  output = gameData.correct < 1 ? 0 : acc;
+  const accText = document.querySelector(".accuracy");
+  accText.innerHTML = `${output}%`;
 }
 
 // reset cursor after adding indentation
 function setCursor() {
   const inputBox = document.querySelector(".input");
 
-  let range = document.createRange()
-  let selection = window.getSelection()
+  let range = document.createRange();
+  let selection = window.getSelection();
 
-  range.selectNodeContents(inputBox)
-  range.collapse(false)
+  range.selectNodeContents(inputBox);
+  range.collapse(false);
 
   selection.removeAllRanges();
-  selection.addRange(range)
-  inputBox.focus()
+  selection.addRange(range);
+  inputBox.focus();
 }
 
 // determine shape of an object
@@ -138,21 +143,20 @@ function getShape(obj) {
   return [cats, snips];
 }
 
-
 // set round display number
 // increase currentRound
-// reset rounds(optional): bool
+// reset(optional): bool
 function setRound(reset) {
   const round = document.querySelector(".round");
 
   if (reset) {
-    roundsLeft = rounds;
-    round.innerHTML = `x${roundsLeft}`;
-    currentRound = 1;
+    gameData.roundsLeft = rounds;
+    round.innerHTML = `x${gameData.roundsLeft}`;
+    gameData.currentRound = 1;
   } else {
-    roundsLeft = rounds - currentRound;
-    round.innerHTML = `x${roundsLeft + 1}`;
-    currentRound++;
+    gameData.roundsLeft = rounds - gameData.currentRound;
+    round.innerHTML = `x${gameData.roundsLeft + 1}`;
+    gameData.currentRound++;
   }
 }
 
@@ -162,21 +166,20 @@ function nextCode() {
 
   for (let i in codeObj) {
     for (let j in codeObj[i]) {
-      
-      if (currentSnip === snip && roundsLeft) {
+      if (gameData.currentSnip === snip && gameData.roundsLeft) {
         setCode(codeObj[i][j]);
         setRound();
         return;
-      } else if (currentSnip === snip && !roundsLeft) {
+      } else if (gameData.currentSnip === snip && !gameData.roundsLeft) {
         setRound(true);
-        currentSnip++;
+        gameData.currentSnip++;
       }
       snip++;
 
       if (snip > totalSnips) {
         const textBox = document.querySelector(".text-container pre");
-        textBox.innerHTML = `CONGRATULATIONS!\nYou'll be typing functions in your sleep!`
-        return
+        textBox.innerHTML = `CONGRATULATIONS!\nYou'll be typing functions in your sleep!`;
+        return;
       }
       const snipText = document.querySelector(".snip");
       snipText.innerHTML = `${snip} / ${totalSnips}`;
@@ -191,14 +194,14 @@ function setCode(code) {
   const textBox = document.querySelector(".text-container pre");
 
   if (Array.isArray(code)) {
-    currentCode = codeObj[code[0]][code[1]];
+    gameData.currentCode = codeObj[code[0]][code[1]];
   } else {
-    currentCode = code.trim();
+    gameData.currentCode = code.trim();
   }
 
-  codeRemaining = currentCode;
-  codeCompleted = "";
-  textBox.innerHTML = currentCode;
+  gameData.codeRemaining = gameData.currentCode;
+  gameData.codeCompleted = "";
+  textBox.innerHTML = gameData.currentCode;
 }
 
 // track typing accuracy
@@ -207,7 +210,7 @@ function setCode(code) {
 function updateText(bool, e, pointer) {
   const textBox = document.querySelector(".text-container pre");
   const inputBox = document.querySelector(".input");
-  let letter = codeRemaining[0];
+  let letter = gameData.codeRemaining[0];
   let dec = "";
   if (letter === undefined) {
     e.preventDefault();
@@ -217,7 +220,6 @@ function updateText(bool, e, pointer) {
   }
 
   if (pointer) {
-
   }
 
   if (letter === " ") {
@@ -229,26 +231,26 @@ function updateText(bool, e, pointer) {
   }
 
   if (bool) {
-    updateAcc(bool)
-    codeCompleted += `<span style="color:white;${dec}">${letter}</span>`;
+    gameData.codeCompleted += `<span style="color:white;${dec}">${letter}</span>`;
   } else {
-    updateAcc(bool)
-    codeCompleted += `<span style="color:red;${dec}">${letter}</span>`;
+    gameData.codeCompleted += `<span style="color:red;${dec}">${letter}</span>`;
   }
 
-  codeRemaining = codeRemaining.substr(1);
-  const newCode = codeCompleted + codeRemaining;
+  updateAcc(bool);
+  gameData.codeRemaining = gameData.codeRemaining.substr(1);
+  const newCode = gameData.codeCompleted + gameData.codeRemaining;
   textBox.innerHTML = newCode;
 }
 
+// auto indent
 function checkIndent(e) {
   const inputBox = document.querySelector(".input");
-  const body = document.querySelector('body')
-  for (let i of codeRemaining) {
+  const body = document.querySelector("body");
+  for (let i of gameData.codeRemaining) {
     if (i == " ") {
       e.preventDefault();
       updateText(true, e);
-      inputBox.innerHTML = inputBox.innerHTML + `&nbsp`
+      inputBox.innerHTML = inputBox.innerHTML + `&nbsp`;
       setCursor();
     } else {
       return;
@@ -257,10 +259,10 @@ function checkIndent(e) {
 }
 
 function handleTab(e) {
-  e.preventDefault()
-  const letter = codeRemaining[0];
+  e.preventDefault();
+  const letter = gameData.codeRemaining[0];
 
-  if (letter == ' ') {
+  if (letter == " ") {
     updateText(true, e);
     // inputBox.innerHTML = "";
     checkIndent(e);
@@ -272,7 +274,7 @@ function handleTab(e) {
 function handleEnter(e) {
   // e.preventDefault()
   const inputBox = document.querySelector(".input");
-  const letter = codeRemaining[0];
+  const letter = gameData.codeRemaining[0];
   if (letter !== undefined && letter.charCodeAt(0) === 10) {
     updateText(true, e);
     // inputBox.innerHTML = "";
@@ -297,7 +299,7 @@ function handleText(e) {
   } else if (e.key === "Meta") {
     e.preventDefault();
   } else {
-    if (e.key === codeRemaining[0]) {
+    if (e.key === gameData.codeRemaining[0]) {
       updateText(true, e);
     } else {
       updateText(false, e);
@@ -305,64 +307,63 @@ function handleText(e) {
   }
 }
 
+function resetGame() {
+  const input = document.querySelector(".input");
+  input.innerHTML = "";
+
+  gameData.currentCode = "";
+  gameData.codeRemaining = "";
+  gameData.codeCompleted = "";
+
+  gameData.currentRound = 1;
+  gameData.currentSnip = 1;
+  gameData.roundsLeft = 0;
+  gameData.continueSnip = false;
+
+  gameData.correct = 0;
+  gameData.incorrect = 0;
+
+  const accText = document.querySelector(".accuracy");
+  accText.innerHTML = `100%`;
+
+  const snipText = document.querySelector(".snip");
+  snipText.innerHTML = `1 / ${totalSnips}`;
+
+  setRound(true);
+  nextCode();
+}
+
 const input = document.querySelector(".input");
 input.addEventListener("keydown", function (e) {
   handleText(e);
 });
 
-
 const snipText = document.querySelector(".snip");
-const totalSnips = getShape(codeObj)[1]
-snipText.innerHTML = `1 / ${totalSnips}`
+const totalSnips = getShape(codeObj)[1];
+snipText.innerHTML = `1 / ${totalSnips}`;
 
-const body = document.querySelector('body')
-body.addEventListener("click", function(e) {
+const body = document.querySelector("body");
+body.addEventListener("click", function (e) {
   const rulesContainer = document.querySelector(".rules-container");
-  rulesContainer.classList.remove('show');
+  rulesContainer.classList.remove("show");
   input.focus();
-})
-
+});
 
 const rules = document.querySelector(".rules-button");
 rules.addEventListener("click", function (e) {
   const rulesContainer = document.querySelector(".rules-container");
-  rulesContainer.classList.toggle('show');
-  e.stopPropagation()
+  rulesContainer.classList.toggle("show");
+  e.stopPropagation();
 });
 
 rules.addEventListener("m", function (e) {
   const rulesBtn = document.querySelector(".rules-button");
-  rulesBtn.classList.toggle('over');
+  rulesBtn.classList.toggle("over");
 });
 
-const reset = document.querySelector('.reset-button')
-reset.addEventListener("click", function(e) {
-  const input = document.querySelector(".input");
-  input.innerHTML = ''
-  currentRound = 1;
-  currentSnip = 1;
-  roundsLeft = 0;
-  cont = false;
-
-  correct = 0;
-  incorrect = 0;
-
-  currentCode = "";
-  codeRemaining = "";
-  codeCompleted = "";
-  
-  incorrect = 0;
-  correct = 0;
-  const accText = document.querySelector('.accuracy')
-  accText.innerHTML = `100%`
-
-  const snipText = document.querySelector(".snip");
-  snipText.innerHTML = `1 / ${totalSnips}`;
-
-  setRound(true)
-  nextCode();
-})
+const reset = document.querySelector(".reset-button");
+reset.addEventListener("click", resetGame);
 
 input.focus();
-setRound(true)
+setRound(true);
 nextCode();

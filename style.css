@@ -1,245 +1,253 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Oswald&family=Roboto+Mono&display=swap');
-/*  
+@import url("https://fonts.googleapis.com/css2?family=Lato&family=Oswald&family=Roboto+Mono&family=Ubuntu&display=swap");
+/*
 font-family: 'Lato', sans-serif;
 font-family: 'Oswald', sans-serif;
 font-family: 'Roboto Mono', monospace; 
+font-family: 'Ubuntu', sans-serif;
 */
-
+:root {
+  --light: #7f8087;
+  --mid: #484d52;
+  --dark: #24252c;
+  --darker: #0a0a0b;
+}
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 body {
-    margin: 0;
-    font-size: 18px;
-    overflow: hidden;
-    user-select: none;
+  margin: 0;
+  font-size: 18px;
+  overflow: hidden;
+  user-select: none;
 }
 
 main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
-    background:#111;
-    z-index: -1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background: var(--darker);
+  z-index: -1;
 }
 .rules-container,
 .content-container {
-    position: relative;
-    width: 90%;
-    max-width: 700px;
-    min-width: 450px;
-    padding: 0 20px 20px;
-    text-align: center;
-    border: .25em solid #888;
-    border-radius: .5em;
-    background: #777;
-    box-shadow: inset 0 0 10px #222;
-    overflow: hidden;
-    pointer-events: none;
+  position: relative;
+  width: 90%;
+  max-width: 700px;
+  min-width: 400px;
+  padding: 0 20px 20px;
+  text-align: center;
+  border: 0.25em solid var(--light);
+  border-radius: 0.5em;
+  background: var(--light);
+  box-shadow: inset 0 0 10px var(--dark);
+  overflow: hidden;
+  pointer-events: none;
 }
 
 h1 {
-    margin: 0;
-    font-family: 'Oswald', sans-serif;
-    color: transparent;
-    background-color: #565656;
-    text-shadow: 2px 2px .75px rgba(255,255,255,0.5);
-    -webkit-background-clip: text;
-       -moz-background-clip: text;
-            background-clip: text; 
-            /* thanks codepen.io/adambundy */
+  margin: 0;
+  font-family: "Oswald", sans-serif;
+  color: transparent;
+  background-color: var(--mid);
+  text-shadow: 2px 2px 0.75px rgba(255, 255, 255, 0.5);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  /* thanks codepen.io/adambundy */
 }
 
 .text-container {
-    display: block;
-    padding: 2px 2%;
-    margin: 2% 0 5%;
-    font-family: 'Lato', sans-serif;
-    font-size: 2.25vmin;
-    text-align: left;
-    border-radius: 1rem;
-    background: #555;
-    box-shadow: 0 0 5px #222;
-    overflow: hidden;
+  display: block;
+  padding: 2px 2%;
+  margin: 2% 0 5%;
+  font-family: "Lato", sans-serif;
+  font-size: 2.25vmin;
+  text-align: left;
+  border-radius: 1rem;
+  background: var(--mid);
+  box-shadow: 0 0 5px var(--dark);
+  overflow: hidden;
 }
 
 .text-container pre {
-    word-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .reset-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 5%;
-    max-height: 30px;
-    margin-left: -6%;
-    border-radius: .5rem;
-    overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 5%;
+  max-height: 30px;
+  margin-left: -6%;
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 
 .reset-button {
-    font-family: 'Lato', sans-serif;
-    font-size: 4vmin;
-    color: #888;
-    border-radius: .5rem;
-    pointer-events: auto;
-    padding: 0 5px 8px;
+  font-family: "Lato", sans-serif;
+  font-size: 4vmin;
+  color: var(--light);
+  border-radius: 0.5rem;
+  pointer-events: auto;
+  padding: 0 5px 8px;
 }
 .reset-button:hover {
-    background: #444;
-    color: red;
+  background: #444;
+  color: red;
 }
 .reset-button:active {
-    background: #999
+  background: #999;
 }
 .input-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 10%;
-    width: 100%;
-    padding-top: 5px;
-    font-size: 24px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 10%;
+  width: 100%;
+  padding-top: 5px;
+  font-size: 24px;
 }
 
 .input {
-    height: 100%;
-    max-height: 300px;
-    width: 100%;
-    border-radius: 1em;
-    padding: 10px;
-    color: white;
-    font-size: 3vmin;
-    font-family: 'Roboto Mono', monospace;
-    text-align: left;
-    white-space: nowrap;
-    border: 4px solid #222;
-    border-radius: 1rem;
-    background: #222;
-    box-shadow: inset 5px 5px 10px #000;
-    outline: none;
-    overflow-y: auto;
+  height: 100%;
+  max-height: 300px;
+  width: 100%;
+  border-radius: 1em;
+  padding: 10px;
+  color: white;
+  font-size: 3vmin;
+  font-family: "Roboto Mono", monospace;
+  text-align: left;
+  white-space: nowrap;
+  border: 4px solid var(--dark);
+  border-radius: 1rem;
+  background: var(--dark);
+  box-shadow: inset 5px 5px 10px #000;
+  outline: none;
+  overflow-y: auto;
 }
 
 .accuracy,
 .round,
 .snip {
-    position: absolute;
-    top: 2%;
-    right: 5%;
-    color: #333;
-    font-size: 4vmin;
-    font-weight: bold;
+  position: absolute;
+  top: 2%;
+  right: 5%;
+  color: var(--dark);
+  font-size: 4vmin;
+  font-weight: bold;
 }
 
 .accuracy {
-    right: auto;
-    left: 5%;
+  right: auto;
+  left: 5%;
 }
 
 .snip {
-    top: auto;
-    bottom: 0;
-    right: auto;
-    left: 5%;
-    color: #222;
-    font-size: 1rem;
-    padding: 2px 0;
+  top: auto;
+  bottom: 0;
+  right: auto;
+  left: 5%;
+  color: var(--dark);
+  font-size: 1rem;
+  padding: 2px 0;
 }
 .rules-container {
-    display: none;
-    position: absolute;
-    height: 20%;
-    color: #ddd;
-    background: #222;
-    transform: translateY(-15%);
-    z-index: 2;
-    user-select: auto;
+  display: none;
+  position: absolute;
+  height: 20%;
+  color: #ddd;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 2vmin;
+  background: var(--dark);
+  transform: translateY(-15%);
+  z-index: 2;
+  user-select: auto;
 }
 .show {
-    display: block;
+  display: block;
 }
 .rules-container p {
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    font-size: 2vmin;
-    text-align: center;
-    user-select: auto;
-}
-
-.rules-container:hover {
-    background: #222;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  text-align: center;
+  user-select: auto;
 }
 
 .rules-container p:first-child {
-    left: 0;
-    top: 10px;
-    width: 150px;
+  left: 0;
+  top: 10px;
+  width: 150px;
 }
 .rules-container p:nth-child(2) {
-    right: 20px;
-    top: 10px;
-    width: 150px;
+  right: 20px;
+  top: 10px;
+  width: 150px;
 }
 
 .rules-container p:nth-child(3) {
-    bottom: 10px;
-    left: 20px;
-    text-align: left;
+  bottom: 10px;
+  left: 20px;
+  text-align: left;
 }
 .rules-container p:last-child {
-    bottom: 10px;
-    right: 30px;
-    text-align: right;
+  bottom: 10px;
+  right: 30px;
+  text-align: right;
 }
 
 h2 {
-    margin: 0;
+  margin: 0;
 }
 
 .rules-button-container {
-    display: flex;
-    max-width: 700px;
-    width: 90%;
-    height: 30px;
-    padding: 0 2%;
-    justify-content: flex-end;
+  display: flex;
+  max-width: 700px;
+  width: 90%;
+  height: 30px;
+  padding: 0 2%;
+  justify-content: flex-end;
 }
 
 .rules-button {
-    width: 100px;
-    color: #333;
-    padding: 2px 5px 5px;
-    text-align: center;
-    font-size: 1.5rem;
-    background: #666;
-    border: 1px solid #888;
-    border-radius: 0 0 .5rem .5rem;
-    pointer-events: auto;
+  width: 100px;
+  color: var(--dark);
+  padding: 2px 5px 5px;
+  text-align: center;
+  font-size: 1.5rem;
+  background: var(--mid);
+  border: 1px solid var(--light);
+  border-radius: 0 0 0.5rem 0.5rem;
+  pointer-events: auto;
 }
 
 .rules-button:hover {
-    color: #999;
-    background: #222;
+  color: var(--light);
+  background: var(--dark);
+}
+
+.rules-button:active {
+  background: var(--grey);
 }
 
 .pointer {
-    text-decoration: underline;
-    text-decoration-style: wavy;
-    text-underline-offset: 3px;
-    animation: blink-underline 1s infinite alternate;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-underline-offset: 3px;
+  animation: blink-underline 1s infinite alternate;
 }
 
 @keyframes blink-underline {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
