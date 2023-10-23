@@ -4,6 +4,8 @@
 // TODO: add practice tabs
 // TODO: if practice mode, display Play option
 // TODO: add reset button
+// TODO: better colors
+
 const codeObj = {
   conditions: {
     easy: `
@@ -84,14 +86,13 @@ function evenCaps(sentence) {
 };
 
 // number of rounds per snippet
-const rounds = 1;
+const rounds = 5;
 
-let currentCode;
-let codeRemaining;
+let currentCode = "";
+let codeRemaining = "";
 let codeCompleted = "";
 
 let currentRound = 1;
-let currentCat = 1;
 let currentSnip = 1;
 let roundsLeft = 0;
 let cont = false;
@@ -169,10 +170,11 @@ function nextCode() {
         currentSnip++;
       }
       snip++;
-      if (snip === totalSnips) {
+
+      if (snip > totalSnips) {
         const textBox = document.querySelector(".text-container pre");
         textBox.innerHTML = `CONGRATULATIONS!\nYou'll be typing functions in your sleep!`
-
+        
         return
       }
       const snipText = document.querySelector(".snip");
@@ -183,7 +185,7 @@ function nextCode() {
 
 // reset current code selection/display
 // code accepts string or array
-// full snippet, or [category, difficulty]
+// full snippet, or [category, subcategory]
 function setCode(code) {
   const textBox = document.querySelector(".text-container pre");
 
@@ -240,6 +242,7 @@ function checkIndent(e) {
   const body = document.querySelector('body')
   for (let i of codeRemaining) {
     if (i == " ") {
+      e.preventDefault();
       updateText(true, e);
       inputBox.innerHTML = inputBox.innerHTML + `&nbsp`
       setCursor();
@@ -263,7 +266,7 @@ function handleTab(e) {
 }
 
 function handleEnter(e) {
-  e.preventDefault()
+  // e.preventDefault()
   const inputBox = document.querySelector(".input");
   const letter = codeRemaining[0];
   if (letter !== undefined && letter.charCodeAt(0) === 10) {
@@ -310,6 +313,31 @@ snipText.innerHTML = `snippet: 1 / ${totalSnips}`
 const body = document.querySelector('body')
 body.addEventListener("click", function(e) {
   input.focus();
+})
+
+const reset = document.querySelector('.reset-button')
+reset.addEventListener("click", function(e) {
+  const input = document.querySelector(".input");
+  input.innerHTML = ''
+  currentRound = 1;
+  currentSnip = 1;
+  roundsLeft = 0;
+  cont = false;
+
+  correct = 0;
+  incorrect = 0;
+
+  currentCode = "";
+  codeRemaining = "";
+  codeCompleted = "";
+  
+  incorrect = 0;
+  correct = 0;
+  const accText = document.querySelector('.accuracy')
+  accText.innerHTML = `100%`
+
+  setRound(true)
+  nextCode();
 })
 
 input.focus();
