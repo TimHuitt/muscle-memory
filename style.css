@@ -6,6 +6,7 @@ font-family: 'Roboto Mono', monospace;
 font-family: 'Ubuntu', sans-serif;
 */
 :root {
+  --lightest: #aab2b8;
   --light: #7f8087;
   --mid: #484d52;
   --dark: #24252c;
@@ -67,7 +68,7 @@ h1 {
   font-size: 2.25vmin;
   text-align: left;
   border-radius: 1rem;
-  background: var(--mid);
+  background: var(--lightest);
   box-shadow: 0 0 5px var(--dark);
   overflow: hidden;
 }
